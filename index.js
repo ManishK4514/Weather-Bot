@@ -1,8 +1,19 @@
 import TelegramBot from "node-telegram-bot-api";
 import axios from "axios";
 import dotenv from 'dotenv';
+import express from "express";
+
+const app = express();
 
 dotenv.config();
+
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
+app.listen(process.env.PORT, () => {
+  console.log(`Example app listening at http://localhost:${process.env.PORT}`)
+})
 
 const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, { polling: true });
 
@@ -23,7 +34,7 @@ bot.on("message", async(msg) => {
         const pressure = data.main.pressure;
         const windSpeed = data.wind.speed;
         const message = `The weather in ${city} is ${weather} with a temperature of ${temperature.toFixed(2)}°C. The humidity is ${humidity}%, the pressure is ${pressure}hPa, and the wind speed is ${windSpeed}m/s.`;
-    
+
         bot.sendMessage(chatId, message);
       } catch (error) {
         bot.sendMessage(chatId, "City doesn't exist.");
